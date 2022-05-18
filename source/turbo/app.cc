@@ -100,9 +100,7 @@ TurboApp::TurboApp(int argc, const char *argv[]) noexcept :
         docTree->growMode = gfGrowLoX | gfGrowHiX | gfGrowHiY;
         docTree->setState(sfShadow, False);
         deskTop->insert(docTree);
-        // Show by default only on large terminals.
-        if (deskTop->size.x - docTree->size.x < 82)
-            docTree->hide();
+        docTree->hide();
     }
 }
 
@@ -246,6 +244,7 @@ void TurboApp::handleEvent(TEvent &event)
                     docTree->tree->focusPrev();
                 break;
             case cmAbout: showAbout(); break;
+            case cmRun: runCurrentFile(); break;
             default:
                 handled = false;
                 break;
@@ -472,4 +471,10 @@ void TurboApp::showAbout()
         deskTop->execView(pd);
     }
     destroy(pd);
+}
+
+void TurboApp::runCurrentFile()
+{
+    //char* current_file = getEditor()->fileName;
+    std::system("env python3");
 }

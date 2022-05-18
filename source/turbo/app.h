@@ -71,6 +71,7 @@ struct TurboApp : public TApplication, EditorWindowParent
     void addEditor(turbo::TScintilla &, const char *path);
     void showEditorList(TEvent *ev);
     void showAbout();
+    void runCurrentFile();
     void toggleTreeView();
 
     void handleFocus(EditorWindow &w) noexcept override;
