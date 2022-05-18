@@ -24,7 +24,13 @@ const ushort
     cmTreeNext      = 107,
     cmTreePrev      = 108,
     cmCloseEditor   = 109,
-    cmRename        = 110;
+    cmRename        = 110,
+    cmRun           = 111,
+    cmDebug         = 112,
+    cmArguments     = 113,
+    cmAbout         = 114,
+    cmPyDao         = 115,
+    cmPyDocs        = 116;
 
 // Commands that cannot be deactivated.
 const ushort
@@ -64,6 +70,7 @@ struct TurboApp : public TApplication, EditorWindowParent
     turbo::TScintilla &createScintilla() noexcept;
     void addEditor(turbo::TScintilla &, const char *path);
     void showEditorList(TEvent *ev);
+    void showAbout();
     void toggleTreeView();
 
     void handleFocus(EditorWindow &w) noexcept override;

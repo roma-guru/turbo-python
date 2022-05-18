@@ -14,6 +14,8 @@
 #define Uses_TStaticText
 #define Uses_TParamText
 #define Uses_TScreen
+#define Uses_TLabel
+#define Uses_TButton
 #include <tvision/tv.h>
 
 #include <fmt/core.h>
@@ -121,12 +123,18 @@ TMenuBar *TurboApp::initMenuBar(TRect r)
             *new TMenuItem( "Close All", cmCloseAll, kbNoKey, hcNoContext ) +
             newLine() +
             *new TMenuItem( "S~u~spend", cmDosShell, kbNoKey, hcNoContext ) +
-            *new TMenuItem( "E~x~it", cmQuit, kbAltX, hcNoContext, "Alt-X" ) +
+            *new TMenuItem( "E~x~it", cmQuit, kbCtrlQ, hcNoContext, "Ctrl-Q" ) +
         *new TSubMenu( "~E~dit", kbAltE ) +
             *new TMenuItem( "~F~ind...", cmFind, kbCtrlF, hcNoContext, "Ctrl-F" ) +
             *new TMenuItem( "~R~eplace...",cmReplace, kbCtrlR, hcNoContext, "Ctrl-R" ) +
             *new TMenuItem( "Find ~N~ext", cmSearchAgain, kbF3, hcNoContext, "F3" ) +
             *new TMenuItem( "Find ~P~revious", cmSearchPrev, kbShiftF3, hcNoContext, "Shift-F3" ) +
+        *new TSubMenu( "~R~un", kbAltR ) +
+            *new TMenuItem( "~R~un", cmRun, kbF5, hcNoContext, "F5") +
+            *new TMenuItem( "~A~rguments", cmArguments, kbNoKey, hcNoContext) +
+        /* *new TSubMenu( "~D~ebug", kbAltD ) + */
+        /*     *new TMenuItem( "~R~un", cmRun, kbShiftF5, hcNoContext, "Shift-F5") + */
+        /*     *new TMenuItem( "~A~rguments", cmArguments, kbNoKey, hcNoContext) + */
         *new TSubMenu( "~W~indows", kbAltW ) +
             *new TMenuItem( "~Z~oom", cmZoom, kbF5, hcNoContext, "F5" ) +
             *new TMenuItem( "~R~esize/move",cmResize, kbCtrlF5, hcNoContext, "Ctrl-F5" ) +
@@ -139,8 +147,13 @@ TMenuBar *TurboApp::initMenuBar(TRect r)
             *new TMenuItem( "Toggle Line ~N~umbers", cmToggleLineNums, kbF8, hcNoContext, "F8" ) +
             *new TMenuItem( "Toggle Line ~W~rapping", cmToggleWrap, kbF9, hcNoContext, "F9" ) +
             *new TMenuItem( "Toggle Auto ~I~ndent", cmToggleIndent, kbNoKey, hcNoContext ) +
-            *new TMenuItem( "Toggle Document ~T~ree View", cmToggleTree, kbNoKey, hcNoContext )
-            );
+            *new TMenuItem( "Toggle Document ~T~ree View", cmToggleTree, kbNoKey, hcNoContext ) +
+        *new TSubMenu( "~H~elp", kbF1 ) +
+            *new TMenuItem( "~A~bout", cmAbout, kbNoKey, hcNoContext ) +
+            *new TMenuItem( "Dao of Python", cmPyDao, kbNoKey, hcNoContext ) +
+            *new TMenuItem( "Python documentation", cmPyDocs, kbNoKey, hcNoContext )
+        );
+
 
 }
 
@@ -232,6 +245,7 @@ void TurboApp::handleEvent(TEvent &event)
                 if (docTree)
                     docTree->tree->focusPrev();
                 break;
+            case cmAbout: showAbout(); break;
             default:
                 handled = false;
                 break;
@@ -440,4 +454,22 @@ void TurboApp::removeEditor(EditorWindow &w) noexcept
 const char *TurboApp::getFileDialogDir() noexcept
 {
     return mostRecentDir.c_str();
+}
+
+void TurboApp::showAbout()
+{
+    int w = 40, h = 14;
+    int x_c = deskTop->size.x/2, y_c = deskTop->size.y/2;
+    TDialog *pd = new TDialog(TRect(x_c-w/2, y_c-h/2, x_c+w/2, y_c+h/2), "About");
+    if (pd) {
+        pd->insert(new TButton(TRect(15,10,25,12), "OK", cmOK, bfDefault));
+        // len: 16
+        pd->insert(new TLabel(TRect(10,2,30,3), "🏎  Turbo Python 🏁", NULL));
+        // len: 11
+        pd->insert(new TLabel(TRect(13,4,30,5), "Version 0.1", NULL));
+        // len: 26
+        pd->insert(new TLabel(TRect(7,6,35,7), "Licensed under BSD in 2022", NULL));
+        deskTop->execView(pd);
+    }
+    destroy(pd);
 }
