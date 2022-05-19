@@ -16,6 +16,7 @@
 #define Uses_TScreen
 #define Uses_TLabel
 #define Uses_TButton
+#define Uses_MsgBox
 #include <tvision/tv.h>
 
 #include <fmt/core.h>
@@ -477,18 +478,17 @@ void TurboApp::showAbout()
     destroy(pd);
 }
 
-#include <string.h>
 void TurboApp::runCurrentFile()
 {
     auto window = dynamic_cast<EditorWindow*>(deskTop->first());
     if (!window) return;
     std::string current_file = window->filePath();
+    std::string exec = "env python3 ";
+    exec += current_file;
 
-    char* py = "env python3";
-    /* strcat(py, current_file.c_str()); */
     def_prog_mode();
     endwin();
-    std::system(py);
+    std::system(exec.c_str());
     reset_prog_mode();
-    refresh();
+    refresh(); draw();
 }
