@@ -20,6 +20,8 @@
 
 #include <fmt/core.h>
 #include <csignal>
+#include <curses.h>
+#include <iostream>
 
 #include "app.h"
 #include "apputils.h"
@@ -65,6 +67,7 @@ TurboApp::TurboApp(int argc, const char *argv[]) noexcept :
     ts += cmSearchPrev;
     ts += cmToggleIndent;
     ts += cmCloseEditor;
+    /* ts += cmRun; */
     disableCommands(ts);
 
     // Actions that only make sense when there is at least one editor.
@@ -160,6 +163,7 @@ TStatusLine *TurboApp::initStatusLine( TRect r )
     r.a.y = r.b.y-1;
     return new TStatusLine( r,
         *new TStatusDef( 0, 0xFFFF ) +
+            *new TStatusItem( "~Ctrl-Q~ Quit", kbNoKey, cmQuit) +
             *new TStatusItem( "~Ctrl-N~ New", kbNoKey, cmNew ) +
             *new TStatusItem( "~Ctrl-O~ Open", kbNoKey, cmOpen ) +
             *new TStatusItem( "~Ctrl-S~ Save", kbNoKey, cmSave ) +
@@ -473,8 +477,18 @@ void TurboApp::showAbout()
     destroy(pd);
 }
 
+#include <string.h>
 void TurboApp::runCurrentFile()
 {
-    //char* current_file = getEditor()->fileName;
-    std::system("env python3");
+    auto window = dynamic_cast<EditorWindow*>(deskTop->first());
+    if (!window) return;
+    std::string current_file = window->filePath();
+
+    char* py = "env python3";
+    /* strcat(py, current_file.c_str()); */
+    def_prog_mode();
+    endwin();
+    std::system(py);
+    reset_prog_mode();
+    refresh();
 }
