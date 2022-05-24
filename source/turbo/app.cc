@@ -21,10 +21,10 @@
 
 #include <fmt/core.h>
 #include <csignal>
-#include <termios.h>
 #include <iostream>
 
 #include "app.h"
+#include "termutils.h"
 #include "apputils.h"
 #include "editwindow.h"
 #include "widgets.h"
@@ -475,19 +475,6 @@ void TurboApp::showAbout()
         deskTop->execView(pd);
     }
     destroy(pd);
-}
-
-// TODO: move to termutils.cc
-void wait_key() {
-    struct termios orig_termios, new_termios;
-    tcgetattr(0, &orig_termios);
-    memcpy(&new_termios, &orig_termios, sizeof(new_termios));
-    cfmakeraw(&new_termios);
-    tcsetattr(0, TCSANOW, &new_termios);
-
-    std::cout << "Please press any key to continue" << std::endl;
-    getchar();
-    tcsetattr(0, TCSANOW, &orig_termios);
 }
 
 void TurboApp::runCurrentFile()
