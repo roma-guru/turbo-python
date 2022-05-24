@@ -465,11 +465,11 @@ void TurboApp::showAbout()
     if (pd) {
         pd->insert(new TButton(TRect(15,10,25,12), "OK", cmOK, bfDefault));
         // len: 16
-        pd->insert(new TLabel(TRect(10,2,30,3), "🏎  Turbo Python 🏁", NULL));
+        pd->insert(new TLabel(TRect(10,2,30,3), "🏎  Turbo Python 🏁", nullptr));
         // len: 11
-        pd->insert(new TLabel(TRect(13,4,30,5), "Version 0.1", NULL));
+        pd->insert(new TLabel(TRect(13,4,30,5), "Version 0.1", nullptr));
         // len: 26
-        pd->insert(new TLabel(TRect(7,6,35,7), "Licensed under BSD in 2022", NULL));
+        pd->insert(new TLabel(TRect(7,6,35,7), "Licensed under BSD in 2022", nullptr));
         deskTop->execView(pd);
     }
     destroy(pd);
@@ -483,9 +483,7 @@ void TurboApp::runCurrentFile()
     std::string exec = "env python3 ";
     exec += current_file;
 
-    def_prog_mode();
-    endwin();
+    TScreen::suspend();
     std::system(exec.c_str());
-    reset_prog_mode();
-    refresh(); draw();
+    TScreen::resume();
 }
