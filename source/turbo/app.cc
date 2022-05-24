@@ -21,7 +21,7 @@
 
 #include <fmt/core.h>
 #include <csignal>
-#include <curses.h>
+#include <termios.h>
 #include <iostream>
 
 #include "app.h"
@@ -475,6 +475,18 @@ void TurboApp::showAbout()
     destroy(pd);
 }
 
+// TODO: move to termutils.cc
+void wait_key() {
+    struct termios orig_termios, new_termios;
+    tcgetattr(0, &orig_termios);
+    memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+    cfmakeraw(&new_termios);
+    tcsetattr(0, TCSANOW, &new_termios);
+
+    getchar();
+    tcsetattr(0, TCSANOW, &orig_termios);
+}
+
 void TurboApp::runCurrentFile()
 {
     auto window = dynamic_cast<EditorWindow*>(deskTop->first());
@@ -485,7 +497,7 @@ void TurboApp::runCurrentFile()
 
     TScreen::suspend();
     std::system(exec.c_str());
-    std::cout << "Please press ENTER to continue";
-    getchar();
+    std::cout << "Please press any key to continue" << std::endl;
+    wait_key();
     TScreen::resume();
 }
