@@ -133,6 +133,7 @@ TMenuBar *TurboApp::initMenuBar(TRect r)
             *new TMenuItem( "Find ~P~revious", cmSearchPrev, kbShiftF3, hcNoContext, "Shift-F3" ) +
         *new TSubMenu( "~R~un", kbAltR ) +
             *new TMenuItem( "~R~un", cmRun, kbF5, hcNoContext, "F5") +
+            *new TMenuItem( "Show output", cmShowOutput, kbAltF5, hcNoContext, "Alt-F5") +
             *new TMenuItem( "~A~rguments", cmArguments, kbNoKey, hcNoContext) +
         /* *new TSubMenu( "~D~ebug", kbAltD ) + */
         /*     *new TMenuItem( "~R~un", cmRun, kbShiftF5, hcNoContext, "Shift-F5") + */
@@ -247,6 +248,7 @@ void TurboApp::handleEvent(TEvent &event)
                 break;
             case cmAbout: showAbout(); break;
             case cmRun: runCurrentFile(); break;
+            case cmShowOutput: showOutput(); break;
             default:
                 handled = false;
                 break;
@@ -483,6 +485,7 @@ void wait_key() {
     cfmakeraw(&new_termios);
     tcsetattr(0, TCSANOW, &new_termios);
 
+    std::cout << "Please press any key to continue" << std::endl;
     getchar();
     tcsetattr(0, TCSANOW, &orig_termios);
 }
@@ -497,7 +500,13 @@ void TurboApp::runCurrentFile()
 
     TScreen::suspend();
     std::system(exec.c_str());
-    std::cout << "Please press any key to continue" << std::endl;
+    wait_key();
+    TScreen::resume();
+}
+
+void TurboApp::showOutput()
+{
+    TScreen::suspend();
     wait_key();
     TScreen::resume();
 }

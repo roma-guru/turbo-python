@@ -30,7 +30,8 @@ const ushort
     cmArguments     = 113,
     cmAbout         = 114,
     cmPyDao         = 115,
-    cmPyDocs        = 116;
+    cmPyDocs        = 116,
+    cmShowOutput    = 117;
 
 // Commands that cannot be deactivated.
 const ushort
@@ -71,6 +72,7 @@ struct TurboApp : public TApplication, EditorWindowParent
     void addEditor(turbo::TScintilla &, const char *path);
     void showEditorList(TEvent *ev);
     void showAbout();
+    void showOutput();
     void runCurrentFile();
     void toggleTreeView();
 
