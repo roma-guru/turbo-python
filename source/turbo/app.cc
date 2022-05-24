@@ -485,5 +485,7 @@ void TurboApp::runCurrentFile()
 
     TScreen::suspend();
     std::system(exec.c_str());
+    std::cout << "Please press ENTER to continue";
+    getchar();
     TScreen::resume();
 }
